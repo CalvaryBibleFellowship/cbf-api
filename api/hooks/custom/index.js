@@ -5,6 +5,8 @@
  * @docs        :: https://sailsjs.com/docs/concepts/extending-sails/hooks
  */
 
+const jwt = require('jsonwebtoken');
+
 module.exports = function defineCustomHook(sails) {
 
   return {
@@ -243,6 +245,23 @@ will be disabled and/or hidden in the UI.
             res.setHeader('Cache-Control', 'no-cache, no-store');
 
             return next();
+          }
+        },
+
+        '/api/*': {
+          fn: async function(req, res, next) {
+            if (!req.headers['x-access-token']) {
+              return next();
+            }
+
+            const token = req.headers['x-access-token'];
+            jwt.verify(token, sails.config.custom.accessTokenSecret, async function(err, decoded) {
+              if (err) return res.status(500).send();
+              req.me = await User.findOne({
+                id: decoded.userId
+              });
+              next();
+            });
           }
         }
       }

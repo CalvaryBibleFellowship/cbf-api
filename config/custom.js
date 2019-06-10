@@ -25,6 +25,16 @@ module.exports.custom = {
   baseUrl: 'http://localhost:1337',
 
   /**************************************************************************
+   *                                                                         *
+   * Access Token Settings                                                   *
+   *                                                                         *
+   **************************************************************************/
+
+  accessTokenSecret: '', // Set via environment variable
+  accessTokenDefaultTTL: '1h',
+  accessTokenRememberMeTTL: '30d',
+
+  /**************************************************************************
   *                                                                         *
   * The TTL (time-to-live) for various sorts of tokens before they expire.  *
   *                                                                         *

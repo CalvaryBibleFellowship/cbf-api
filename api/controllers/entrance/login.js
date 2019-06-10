@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken');
+
 module.exports = {
 
 
@@ -98,17 +100,15 @@ and exposed as \`req.me\`.)`
           'because a browser\'s session cookie cannot be reset over sockets.\n'+
           'Please use a traditional HTTP request instead.'
         );
-      } else {
-        this.req.session.cookie.maxAge = sails.config.custom.rememberMeCookieMaxAge;
       }
     }//ﬁ
 
-    // Modify the active session instance.
-    this.req.session.userId = userRecord.id;
-
-    // Send success response (this is where the session actually gets persisted)
-    return exits.success();
-
+    const {accessTokenSecret, accessTokenDefaultTTL, accessTokenRememberMeTTL} = sails.config.custom;
+    const tokenTTL = (inputs.rememberMe && !this.req.isSocket) ? accessTokenRememberMeTTL : accessTokenDefaultTTL;
+    jwt.sign({userId: userRecord.id}, accessTokenSecret, {expiresIn: tokenTTL}, function(err, token) {
+      if (err) throw err;
+      exits.success({token});
+    });
   }
 
 };
