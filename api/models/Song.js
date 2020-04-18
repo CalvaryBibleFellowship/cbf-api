@@ -11,9 +11,8 @@ module.exports = {
     number: {type: 'number'},
     title: {type: 'string', required: true},
     key: {type: 'string'},
-    writers: {type: 'string'},
     lyrics: {type: 'string'},
-    openSongLyrics: {type: 'string'}
+    ccli: {type: 'string'},
   },
 
   afterCreate(record, cb) {
