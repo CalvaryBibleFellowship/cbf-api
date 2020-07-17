@@ -12,6 +12,7 @@ module.exports = {
     title: {type: 'string', required: true},
     key: {type: 'string'},
     lyrics: {type: 'string'},
+    formattedLyrics: {type: 'json'},
     ccli: {type: 'string'},
   },
 
