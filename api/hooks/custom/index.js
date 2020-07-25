@@ -181,13 +181,16 @@ will be disabled and/or hidden in the UI.
             // wipe the user id from the requesting user agent's session,
             // and then send the "unauthorized" response.
             if (!loggedInUser) {
-              sails.log.warn('Somehow, the user record for the logged-in user (`'+req.session.userId+'`) has gone missing....');
-              delete req.session.userId;
+              sails.log.warn('Somehow, the user record for the logged-in user (`' + userId + '`) has gone missing....');
               return res.unauthorized();
             }
 
-            if (!loggedInUser.password || loggedInUser.emailStatus === 'unconfirmed') {
-              return res.forbidden();
+            if (loggedInUser.emailStatus === 'unconfirmed') {
+              return res.forbidden("Looks like you haven't verified your email address. Please check your inbox.");
+            }
+
+            if (!loggedInUser.enabled) {
+              return res.forbidden("Looks like you haven't been granted access by an admin. Please contact one of our elders or deacons.");
             }
 
             // Expose the user record as an extra property on the request object (`req.me`).

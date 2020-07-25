@@ -69,7 +69,12 @@ and exposed as \`req.me\`.)`
     },
 
     unconfirmed: {
-      description: "This user has not verified his email and so cannot access the API",
+      description: "User has not verified his email and so cannot access the API",
+      responseType: 'forbidden'
+    },
+
+    notEnabled: {
+      description: "User has not been enabled by a CBF Admin",
       responseType: 'forbidden'
     }
 
@@ -91,7 +96,11 @@ and exposed as \`req.me\`.)`
       .intercept('incorrect', 'badCombo');
 
     if (userRecord.emailStatus === "unconfirmed") {
-      throw 'unconfirmed';
+      throw { unconfirmed: "Looks like you haven't verified your email address. Please check your inbox." };
+    }
+
+    if (!userRecord.enabled) {
+      throw { notEnabled: "Looks like you haven't been granted access by an admin. Please contact one of our elders or deacons." };
     }
 
     const { accessTokenSecret, accessTokenDefaultTTL, accessTokenRememberMeTTL } = sails.config.custom;
