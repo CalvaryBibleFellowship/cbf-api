@@ -186,10 +186,8 @@ will be disabled and/or hidden in the UI.
               return res.unauthorized();
             }
 
-            // Add additional information for convenience when building top-level navigation.
-            // (i.e. whether to display "Dashboard", "My Account", etc.)
             if (!loggedInUser.password || loggedInUser.emailStatus === 'unconfirmed') {
-              loggedInUser.dontDisplayAccountLinkInNav = true;
+              return res.forbidden();
             }
 
             // Expose the user record as an extra property on the request object (`req.me`).

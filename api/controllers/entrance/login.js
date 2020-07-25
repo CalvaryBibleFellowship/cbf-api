@@ -66,49 +66,40 @@ and exposed as \`req.me\`.)`
       // To customize the response for _only this_ action, replace `responseType` with
       // something else.  For example, you might set `statusCode: 498` and change the
       // implementation below accordingly (see http://sailsjs.com/docs/concepts/controllers).
+    },
+
+    unconfirmed: {
+      description: "This user has not verified his email and so cannot access the API",
+      responseType: 'forbidden'
     }
 
   },
 
 
-  fn: async function (inputs, exits) {
-    // Look up by the email address.
-    // (note that we lowercase it to ensure the lookup is always case-insensitive,
-    // regardless of which database we're using)
-    var userRecord = await User.findOne({
+  fn: async function(inputs, exits) {
+    const userRecord = await User.findOne({
       emailAddress: inputs.emailAddress.toLowerCase(),
     });
 
     // If there was no matching user, respond thru the "badCombo" exit.
-    if(!userRecord) {
+    if (!userRecord) {
       throw 'badCombo';
     }
 
     // If the password doesn't match, then also exit thru "badCombo".
     await sails.helpers.passwords.checkPassword(inputs.password, userRecord.password)
-    .intercept('incorrect', 'badCombo');
+      .intercept('incorrect', 'badCombo');
 
-    // If "Remember Me" was enabled, then keep the session alive for
-    // a longer amount of time.  (This causes an updated "Set Cookie"
-    // response header to be sent as the result of this request -- thus
-    // we must be dealing with a traditional HTTP request in order for
-    // this to work.)
-    if (inputs.rememberMe) {
-      if (this.req.isSocket) {
-        sails.log.warn(
-          'Received `rememberMe: true` from a virtual request, but it was ignored\n'+
-          'because a browser\'s session cookie cannot be reset over sockets.\n'+
-          'Please use a traditional HTTP request instead.'
-        );
-      }
-    }//ﬁ
+    if (userRecord.emailStatus === "unconfirmed") {
+      throw 'unconfirmed';
+    }
 
-    const {accessTokenSecret, accessTokenDefaultTTL, accessTokenRememberMeTTL} = sails.config.custom;
-    const tokenTTL = (inputs.rememberMe && !this.req.isSocket) ? accessTokenRememberMeTTL : accessTokenDefaultTTL;
-    jwt.sign({userId: userRecord.id}, accessTokenSecret, {expiresIn: tokenTTL}, function(err, token) {
+    const { accessTokenSecret, accessTokenDefaultTTL, accessTokenRememberMeTTL } = sails.config.custom;
+    const tokenTTL = inputs.rememberMe ? accessTokenRememberMeTTL : accessTokenDefaultTTL;
+    jwt.sign({ userId: userRecord.id }, accessTokenSecret, { expiresIn: tokenTTL }, function(err, token) {
       if (err) throw err;
       const userAttrs = _.pick(userRecord, ['emailAddress', 'fullName', 'phone', 'gender'])
-      exits.success({...userAttrs, token});
+      exits.success({ ...userAttrs, token });
     });
   }
 
