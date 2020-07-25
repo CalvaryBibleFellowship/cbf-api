@@ -69,15 +69,15 @@ module.exports.custom = {
   //--------------------------------------------------------------------------
 
   // The sender that all outgoing emails will appear to come from.
-  fromEmailAddress: 'noreply@example.com',
-  fromName: 'The NEW_APP_NAME Team',
+  fromEmailAddress: 'support@cbfchurch.in',
+  fromName: 'Calvary Bible Fellowship',
 
   // Email address for receiving support messages & other correspondences.
-  internalEmailAddress: 'support+development@example.com',
+  internalEmailAddress: 'support+development@cbfchurch.in',
 
   // Whether to require proof of email address ownership any time a new user
   // signs up, or when an existing user attempts to change their email address.
-  verifyEmailAddresses: false,
+  verifyEmailAddresses: true,
 
   /**************************************************************************
   *                                                                         *
