@@ -24,7 +24,7 @@ module.exports.routes = {
 
   'GET /signup':             { action: 'entrance/view-signup' },
   'GET /email/confirm':      { action: 'entrance/confirm-email' },
-  'GET /email/confirmed':    { view:   'pages/entrance/confirmed-email' },
+  // 'GET /email/confirmed':    { view:   'pages/entrance/confirmed-email' },
 
   'GET /login':              { action: 'entrance/view-login' },
   'GET /password/forgot':    { action: 'entrance/view-forgot-password' },
@@ -64,6 +64,9 @@ module.exports.routes = {
   '/terms':                   '/legal/terms',
   '/logout':                  '/api/account/logout',
 
-  'GET /api/sermons/sync': {action: 'sermon/sync'}
+  'GET /api/sermons/sync': {action: 'sermon/sync'},
 
+  'GET /email/confirmed': function(req, res) {
+    res.redirect(`${sails.config.custom.adminAppUrl}/email/confirmed`);
+  },
 };
