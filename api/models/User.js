@@ -117,7 +117,15 @@ email status until they click the link in the confirmation email.`
 
     picture: { type: 'string' },
 
-    enabled: { type: 'boolean' },
+    enabled: {
+      type: 'boolean',
+      defaultsTo: false
+    },
+
+    roles: {
+      type: 'json',
+      defaultsTo: ['member']
+    },
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
