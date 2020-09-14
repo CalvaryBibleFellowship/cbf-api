@@ -11,6 +11,10 @@
 module.exports.policies = {
 
   '*': 'is-logged-in',
+  'user/find': 'is-super-admin',
+  'user/create': 'is-super-admin',
+  'user/update': 'is-super-admin',
+  'user/destroy': 'is-super-admin',
 
   // Bypass the `is-logged-in` policy for:
   'entrance/*': true,

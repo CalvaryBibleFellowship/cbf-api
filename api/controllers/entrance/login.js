@@ -107,7 +107,7 @@ and exposed as \`req.me\`.)`
     const tokenTTL = inputs.rememberMe ? accessTokenRememberMeTTL : accessTokenDefaultTTL;
     jwt.sign({ userId: userRecord.id }, accessTokenSecret, { expiresIn: tokenTTL }, function(err, token) {
       if (err) throw err;
-      const userAttrs = _.pick(userRecord, ['emailAddress', 'fullName', 'phone', 'gender'])
+      const userAttrs = userRecord.toJSON();
       exits.success({ ...userAttrs, token });
     });
   }
