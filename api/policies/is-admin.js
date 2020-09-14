@@ -1,7 +1,7 @@
 /**
- * is-super-admin
+ * is-admin
  *
- * A simple policy that blocks requests from non-super-admins.
+ * A simple policy that blocks requests from non-admins.
  *
  * For more about how to use policies, see:
  *   https://sailsjs.com/config/policies
@@ -14,7 +14,7 @@ module.exports = async function (req, res, proceed) {
     return res.unauthorized();
   }
 
-  if (!User.isSuperAdmin(req.me)) {
+  if (!User.isAdmin(req.me)) {
     return res.forbidden();
   }
 

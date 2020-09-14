@@ -10,18 +10,16 @@
 
 module.exports.policies = {
 
-  '*': 'is-logged-in',
-  'user/find': 'is-super-admin',
-  'user/create': 'is-super-admin',
-  'user/update': 'is-super-admin',
-  'user/destroy': 'is-super-admin',
+  '*': 'is-admin',
+  'song/find': 'is-logged-in',
+  'song/findOne': 'is-logged-in',
+  'user/*': 'is-super-admin',
+  'user/findOne': 'is-logged-in',
 
   // Bypass the `is-logged-in` policy for:
   'entrance/*': true,
   'account/logout': true,
   'view-homepage-or-redirect': true,
   'deliver-contact-form-message': true,
-  'song/find': true,
-  'sermon/find': true,
   'sermon/sync': true
 };

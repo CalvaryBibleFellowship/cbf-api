@@ -125,6 +125,10 @@ email status until they click the link in the confirmation email.`
 
   },
 
+  isAdmin: function(user) {
+    return user.roles.includes('admin');
+  },
+
   isSuperAdmin: function(user) {
     return user.roles.includes('super_admin');
   },
