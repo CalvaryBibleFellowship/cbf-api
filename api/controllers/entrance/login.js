@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken');
 
 module.exports = {
 
@@ -103,13 +102,30 @@ and exposed as \`req.me\`.)`
       throw { notEnabled: "Looks like you haven't been granted access by an admin. Please contact one of our elders or deacons." };
     }
 
-    const { accessTokenSecret, accessTokenDefaultTTL, accessTokenRememberMeTTL } = sails.config.custom;
-    const tokenTTL = inputs.rememberMe ? accessTokenRememberMeTTL : accessTokenDefaultTTL;
-    jwt.sign({ userId: userRecord.id }, accessTokenSecret, { expiresIn: tokenTTL }, function(err, token) {
-      if (err) throw err;
-      const userAttrs = userRecord.toJSON();
-      exits.success({ ...userAttrs, token });
-    });
+    // If "Remember Me" was enabled, then keep the session alive for
+    // a longer amount of time.  (This causes an updated "Set Cookie"
+    // response header to be sent as the result of this request -- thus
+    // we must be dealing with a traditional HTTP request in order for
+    // this to work.)
+    if (inputs.rememberMe) {
+      if (this.req.isSocket) {
+        sails.log.warn(
+          'Received `rememberMe: true` from a virtual request, but it was ignored\n'+
+          'because a browser\'s session cookie cannot be reset over sockets.\n'+
+          'Please use a traditional HTTP request instead.'
+        );
+      } else {
+        this.req.session.cookie.maxAge = sails.config.custom.rememberMeCookieMaxAge;
+      }
+    }//ﬁ
+
+    // Modify the active session instance.
+    this.req.session.userId = userRecord.id;
+    this.res.cookie('userId', userRecord.id);
+
+    // Send success response (this is where the session actually gets persisted)
+    return exits.success();
+
   }
 
 };

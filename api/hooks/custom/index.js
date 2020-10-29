@@ -5,8 +5,6 @@
  * @docs        :: https://sailsjs.com/docs/concepts/extending-sails/hooks
  */
 
-const jwt = require('jsonwebtoken');
-
 module.exports = function defineCustomHook(sails) {
 
   return {
@@ -152,36 +150,24 @@ will be disabled and/or hidden in the UI.
               return res.redirect(sails.config.custom.baseUrl+req.url);
             }//•
 
-            if (!req.headers['x-access-token']) {
-              // No credentials provided. Proceed as usual.
-              return next();
-            }
+            // No session? Proceed as usual.
+            // (e.g. request for a static asset)
+            if (!req.session) { return next(); }
 
-            let userId;
-            const token = req.headers['x-access-token'];
-            try {
-              userId = await new Promise((resolve, reject) => {
-                jwt.verify(token, sails.config.custom.accessTokenSecret, async function(err, decoded) {
-                  if (err) return reject(err);
-                  resolve(decoded.userId);
-                });
-              });
-            } catch (e) {
-              // JWT got expired or is invalid. Authorization will be performed by policies. Continue without setting
-              // `req.me` so that routes that don't need authorization can still work (eg: /api/account/logout)
-              return next();
-            }
+            // Not logged in? Proceed as usual.
+            if (!req.session.userId) { return next(); }
 
             // Otherwise, look up the logged-in user.
             var loggedInUser = await User.findOne({
-              id: userId
+              id: req.session.userId
             });
 
             // If the logged-in user has gone missing, log a warning,
             // wipe the user id from the requesting user agent's session,
             // and then send the "unauthorized" response.
             if (!loggedInUser) {
-              sails.log.warn('Somehow, the user record for the logged-in user (`' + userId + '`) has gone missing....');
+              sails.log.warn('Somehow, the user record for the logged-in user (`'+req.session.userId+'`) has gone missing....');
+              delete req.session.userId;
               return res.unauthorized();
             }
 
