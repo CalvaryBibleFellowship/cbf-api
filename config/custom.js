@@ -39,7 +39,7 @@ module.exports.custom = {
   * if "Remember Me" was checked while logging in.                          *
   *                                                                         *
   **************************************************************************/
-  rememberMeCookieMaxAge: 30*24*60*60*1000, // 30 days
+  rememberMeCookieMaxAge: 6*30*24*60*60*1000, // 6 months
 
   /**************************************************************************
   *                                                                         *
