@@ -53,6 +53,7 @@ module.exports = {
       to: inputs.emailAddress,
       subject: 'Password reset instructions',
       template: 'email-reset-password',
+      layout: 'layout-action-email',
       templateData: {
         fullName: userRecord.fullName,
         token: token

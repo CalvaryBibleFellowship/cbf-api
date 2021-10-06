@@ -1,3 +1,5 @@
+const EmailService = require("../../services/EmailService");
+
 module.exports = {
 
 
@@ -97,11 +99,11 @@ the account verification message.)`,
 
     if (sails.config.custom.verifyEmailAddresses) {
       // Send "confirm account" email
-      await sails.helpers.sendTemplateEmail.with({
+      EmailService.addToQueue({
         to: newEmailAddress,
         subject: 'Please confirm your account',
-        layout: false,
         template: 'email-verify-account',
+        layout: 'layout-action-email',
         templateData: {
           fullName: inputs.fullName,
           token: newUserRecord.emailProofToken

@@ -1,0 +1,26 @@
+<tr
+  style="
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    box-sizing: border-box;
+    font-size: 14px;
+    margin: 0;
+  "
+>
+  <td
+    class="content-block"
+    style="
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      box-sizing: border-box;
+      font-size: 14px;
+      vertical-align: top;
+      margin: 0;
+      padding: 0 0 20px;
+      line-height: 1.5em;
+    "
+    valign="top"
+  >
+    <% if (user.enabled) { %> You have been granted access to our resources. You will now be able to login to our apps.
+    <% } else { %> Your access to our resources has been revoked. Please contact an admin if you have any questions. <%
+    } %>
+  </td>
+</tr>
