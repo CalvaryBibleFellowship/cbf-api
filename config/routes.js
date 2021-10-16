@@ -47,7 +47,7 @@ module.exports.routes = {
   'PUT   /api/entrance/login':                        { action: 'entrance/login' },
   'POST  /api/entrance/signup':                       { action: 'entrance/signup' },
   'POST  /api/entrance/send-password-recovery-email': { action: 'entrance/send-password-recovery-email' },
-  'POST  /api/entrance/update-password-and-login':    { action: 'entrance/update-password-and-login' },
+  'POST  /api/entrance/reset-password':               { action: 'entrance/reset-password' },
   'POST  /api/deliver-contact-form-message':          { action: 'deliver-contact-form-message' },
 
   '/send-notifications': 'NotificationController.send',
